@@ -41,5 +41,9 @@ with open('dataset/iCall/iCall.csv') as f:
 
     g.add_edges_from(new_edges)
 
+    for n in g.nodes.keys():
+        g.nodes[n]['start_time'] = '1000-01-01 00:00:00'
+        g.nodes[n]['end_time'] = '9999-01-01 00:00:00'
+
 
 nx.write_graphml(g, 'iCall.ml')

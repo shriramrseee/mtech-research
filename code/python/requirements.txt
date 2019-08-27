@@ -1,0 +1,2 @@
+networkx
+gremlinpython==3.4.2
