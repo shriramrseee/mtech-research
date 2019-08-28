@@ -11,7 +11,6 @@ import org.apache.tinkerpop.gremlin.util.function.Lambda;
 import java.io.IOException;
 import java.util.List;
 
-import static org.apache.tinkerpop.gremlin.process.traversal.P.without;
 import static org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.__.outE;
 
 public class tSSSP {
