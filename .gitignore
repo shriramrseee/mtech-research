@@ -1,2 +1,7 @@
 dataset/
+logs/
+.idea/
 apache-tinkerpop-gremlin-server-3.4.2/
+*.pyc
+target/
+~*
