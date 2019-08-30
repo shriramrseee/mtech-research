@@ -4,7 +4,7 @@ g = nx.Graph()
 
 edges = {}
 
-with open('dataset/iCall/iCall.csv') as f:
+with open('C:\Users\Beast\Documents\IISc\Research\mtech-research\dataset\iCall\iCall.csv') as f:
     for _ in range(1):
         next(f)
     for l in f:
@@ -37,7 +37,7 @@ with open('dataset/iCall/iCall.csv') as f:
         for i in dates:
             start = start + ',' + i[0]
             end = end + ',' + i[1]
-        new_edges.append((u, v, {'start_time': start[1:], 'end_time': end[1:]}))
+        new_edges.append((u, v, {'start_time': dates[0][0], 'end_time': dates[-1][1]}))
 
     g.add_edges_from(new_edges)
 

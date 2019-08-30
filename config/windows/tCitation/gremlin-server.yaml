@@ -15,33 +15,24 @@
 # specific language governing permissions and limitations
 # under the License.
 
-# Note that TinkerPop does not include Neo4j dependencies in its
-# distributions. This file cannot be used as a configuration file to 
-# Gremlin Server unless Neo4j dependencies are installed on the 
-# Gremlin Server path with:
-#
-# bin/gremlin-server.sh -i org.apache.tinkerpop neo4j-gremlin x.y.z
-# 
-# Note that unless under a commercial agreement with Neo4j, Inc., 
-# Neo4j is licensed AGPL. 
-
 host: localhost
 port: 8182
 scriptEvaluationTimeout: 30000
 channelizer: org.apache.tinkerpop.gremlin.server.channel.WebSocketChannelizer
 graphs: {
-  graph: "C:\\Users\\Beast\\Documents\\IISc\\Research\\mtech-research\\config\\tCitation\\tCitation-neo4j.properties"}
+  graph: "C:\\Users\\Beast\\Documents\\IISc\\Research\\mtech-research\\config\\windows\\tCitation\\tCitation.properties"
+}
 scriptEngines: {
   gremlin-groovy: {
     plugins: { org.apache.tinkerpop.gremlin.server.jsr223.GremlinServerGremlinPlugin: {},
-               org.apache.tinkerpop.gremlin.neo4j.jsr223.Neo4jGremlinPlugin: {},
+               org.apache.tinkerpop.gremlin.tinkergraph.jsr223.TinkerGraphGremlinPlugin: {},
                org.apache.tinkerpop.gremlin.jsr223.ImportGremlinPlugin: {classImports: [java.lang.Math], methodImports: [java.lang.Math#*]},
-               org.apache.tinkerpop.gremlin.jsr223.ScriptFileGremlinPlugin: {files: ["C:\\Users\\Beast\\Documents\\IISc\\Research\\mtech-research\\config\\tCitation\\tCitation-neo4j.groovy"]}}}}
+               org.apache.tinkerpop.gremlin.jsr223.ScriptFileGremlinPlugin: {files: [scripts/empty-sample.groovy]}}}}
 serializers:
-  - { className: org.apache.tinkerpop.gremlin.driver.ser.GryoMessageSerializerV3d0, config: { ioRegistries: [org.apache.tinkerpop.gremlin.tinkergraph.structure.TinkerIoRegistryV3d0] }}            # application/vnd.gremlin-v3.0+gryo
-  - { className: org.apache.tinkerpop.gremlin.driver.ser.GryoMessageSerializerV3d0, config: { serializeResultToString: true }}                                                                      # application/vnd.gremlin-v3.0+gryo-stringd
-  - { className: org.apache.tinkerpop.gremlin.driver.ser.GraphSONMessageSerializerV3d0, config: { ioRegistries: [org.apache.tinkerpop.gremlin.tinkergraph.structure.TinkerIoRegistryV3d0] }}        # application/json
-  - { className: org.apache.tinkerpop.gremlin.driver.ser.GraphBinaryMessageSerializerV1 }                                                                                                           # application/vnd.graphbinary-v1.0
+  - { className: org.apache.tinkerpop.gremlin.driver.ser.GryoMessageSerializerV3d0, config: { ioRegistries: [org.apache.tinkerpop.gremlin.tinkergraph.structure.TinkerIoRegistryV3d0] }}             # application/vnd.gremlin-v3.0+gryo
+  - { className: org.apache.tinkerpop.gremlin.driver.ser.GryoMessageSerializerV3d0, config: { serializeResultToString: true }}                                                                       # application/vnd.gremlin-v3.0+gryo-stringd
+  - { className: org.apache.tinkerpop.gremlin.driver.ser.GraphSONMessageSerializerV3d0, config: { ioRegistries: [org.apache.tinkerpop.gremlin.tinkergraph.structure.TinkerIoRegistryV3d0] }}         # application/json
+  - { className: org.apache.tinkerpop.gremlin.driver.ser.GraphBinaryMessageSerializerV1 }                                                                                                            # application/vnd.graphbinary-v1.0
 processors:
   - { className: org.apache.tinkerpop.gremlin.server.op.session.SessionOpProcessor, config: { sessionTimeout: 28800000 }}
   - { className: org.apache.tinkerpop.gremlin.server.op.traversal.TraversalOpProcessor, config: { cacheExpirationTime: 600000, cacheMaxSize: 1000 }}
