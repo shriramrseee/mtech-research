@@ -1,5 +1,6 @@
 package in.research.baseline.experiments;
 
+import in.research.baseline.queries.GetVertices;
 import in.research.baseline.queries.tBFS;
 import in.research.graph.connectors.Graph;
 import in.research.graph.connectors.TinkerGraphFactory;
@@ -16,11 +17,15 @@ public class ExptBFS {
         TinkerGraphFactory tg = new TinkerGraphFactory();
         Graph g = tg.connectInstance("localhost", 8182);
 
+        GetVertices getVertices = new GetVertices(g);
+
+        List vertices = getVertices.runGetVertices(100);
+
         tBFS bfs = new tBFS(g);
 
-        List result = bfs.runBFS(9306117L, 1);
+        bfs.runBFS(vertices, -1);
 
-        logger.log("INFO", result);
+        logger.log("INFO", "Completed");
 
         System.exit(0);
     }

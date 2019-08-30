@@ -24,59 +24,74 @@ public class tBFS {
         logger = new Log();
     }
 
-    public List runBFS(Long SourceID, Integer Steps) throws Exception {
+    public void runBFS(List<Long> Source, Integer Steps) throws Exception {
 
 
         GraphTraversalSource g = (GraphTraversalSource) graph.getGraph();
 
-        logger.log("INFO", "Start tBFS for Vertex,Steps: " + SourceID.toString() + "," + Steps.toString());
+        Long avgTime = 0L;
+        Long start = 0L;
+        Long end = 0L;
 
-        GraphTraversal<Vertex, Vertex> t = g.withSack(Lambda.supplier("[:]"))
-                .V(SourceID)
-                .store("visitedSet")
-                .sack(Lambda.biFunction("m, v -> m['arrival'] = [:]; m"))
-                .sack(Lambda.biFunction("m, v -> m['parent'] = [:]; m"))
-                .sack(Lambda.biFunction("m, v -> m['pre_arrival'] = [:]; m"))
-                .sack(Lambda.biFunction("m, v -> m['pre_parent'] = [:]; m"))
-                .sack(Lambda.biFunction("m, v -> m['arrival'][v.id()] = v.value('start_time'); m"))
-                .sack(Lambda.biFunction("m, v -> m['parent'][v.id()] = -1; m"))
-                .repeat(
-                        outE()
-                                .filter(__.as("b")
-                                        .sack().as("c")
-                                        .select("b", "c")
-                                        .map(Lambda.function("it -> it.path().get('c')['arrival'][it.path().get('b').outVertex().id()] < it.path().get('b').value('end_time')"))
-                                )
-                                .sack(Lambda.biFunction("m, e -> m['pre_arrival'][e.inVertex().id()] = m['arrival'][e.outVertex().id()] > e.value('start_time') ? m['arrival'][e.outVertex().id()] : e.value('start_time') ; m"))
-                                .sack(Lambda.biFunction("m, e -> m['pre_parent'][e.inVertex().id()] = e.outVertex().id(); m"))
-                                .inV()
-                                .dedup()
-                                .where(without("visitedSet"))
-                                .store("visitedSet")
-                                .sack(Lambda.biFunction("m, v -> m['arrival'][v.id()] =  m['pre_arrival'][v.id()]; m"))
-                                .sack(Lambda.biFunction("m, v -> m['parent'][v.id()] =  m['pre_parent'][v.id()]; m"))
-                );
+        for(Long SourceID : Source) {
 
-        List bfsList;
+            start = System.currentTimeMillis();
 
-        if (Steps == -1) {
-            bfsList = t.tail(1)
-                    .sack()
-                    .map(Lambda.function("it -> [it.sack()['arrival'], it.sack()['parent']]"))
-                    .toList();
-        } else {
-            bfsList = t.times(Steps)
-                    .tail(1)
-                    .sack()
-                    .map(Lambda.function("it -> [it.sack()['arrival'], it.sack()['parent']]"))
-                    .toList();
+            GraphTraversal<Vertex, Vertex> t = g.withSack(Lambda.supplier("[:]"))
+                    .V(SourceID)
+                    .store("visitedSet")
+                    .sack(Lambda.biFunction("m, v -> m['arrival'] = [:]; m"))
+                    .sack(Lambda.biFunction("m, v -> m['parent'] = [:]; m"))
+                    .sack(Lambda.biFunction("m, v -> m['pre_arrival'] = [:]; m"))
+                    .sack(Lambda.biFunction("m, v -> m['pre_parent'] = [:]; m"))
+                    .sack(Lambda.biFunction("m, v -> m['arrival'][v.id()] = v.value('start_time'); m"))
+                    .sack(Lambda.biFunction("m, v -> m['parent'][v.id()] = -1; m"))
+                    .repeat(
+                            outE()
+                                    .filter(__.as("b")
+                                            .sack().as("c")
+                                            .select("b", "c")
+                                            .map(Lambda.function("it -> it.path().get('c')['arrival'][it.path().get('b').outVertex().id()] < it.path().get('b').value('end_time')"))
+                                    )
+                                    .sack(Lambda.biFunction("m, e -> m['pre_arrival'][e.inVertex().id()] = m['arrival'][e.outVertex().id()] > e.value('start_time') ? m['arrival'][e.outVertex().id()] : e.value('start_time') ; m"))
+                                    .sack(Lambda.biFunction("m, e -> m['pre_parent'][e.inVertex().id()] = e.outVertex().id(); m"))
+                                    .inV()
+                                    .dedup()
+                                    .where(without("visitedSet"))
+                                    .store("visitedSet")
+                                    .sack(Lambda.biFunction("m, v -> m['arrival'][v.id()] =  m['pre_arrival'][v.id()]; m"))
+                                    .sack(Lambda.biFunction("m, v -> m['parent'][v.id()] =  m['pre_parent'][v.id()]; m"))
+                    );
+
+            List bfsList;
+
+            if (Steps == -1) {
+                bfsList = t.tail(1)
+                        .sack()
+                        .map(Lambda.function("it -> [it.sack()['arrival'], it.sack()['parent']]"))
+                        .count()
+                        .toList();
+            } else {
+                bfsList = t.times(Steps)
+                        .tail(1)
+                        .sack()
+                        .map(Lambda.function("it -> [it.sack()['arrival'], it.sack()['parent']]"))
+                        .count()
+                        .toList();
+            }
+
+            end = System.currentTimeMillis();
+
+            logger.log("INFO", "Vertex,Steps,Time(ms): " + SourceID.toString() + "," + Steps.toString() + "," + (end - start));
+
+            avgTime += (end-start);
+
+
         }
 
-        logger.log("INFO", "Finish tBFS for Vertex,Steps: " + SourceID.toString() + "," + Steps.toString());
+        logger.log("INFO", "Avg. Time(ms): " + avgTime * 1.0 / Source.size());
 
         g.close();
-
-        return bfsList;
 
     }
 
