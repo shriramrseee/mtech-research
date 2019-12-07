@@ -5,3 +5,10 @@ apache-tinkerpop-gremlin-server-3.4.2/
 *.pyc
 target/
 ~*
+*.csv
+*.xlsx
+*.log
+*.pdf
+*.txt
+*.png
+*.pptx

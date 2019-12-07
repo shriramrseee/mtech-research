@@ -19,7 +19,7 @@ public class ExptSSSP {
 
         GetVertices getVertices = new GetVertices(g);
 
-        List vertices = getVertices.runGetVertices(100);
+        List vertices = getVertices.runGetVertices(200);
 
         tSSSP sssp = new tSSSP(g);
 

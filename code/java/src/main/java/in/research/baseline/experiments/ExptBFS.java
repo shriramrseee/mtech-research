@@ -19,7 +19,7 @@ public class ExptBFS {
 
         GetVertices getVertices = new GetVertices(g);
 
-        List vertices = getVertices.runGetVertices(100);
+        List vertices = getVertices.runGetVertices(200);
 
         tBFS bfs = new tBFS(g);
 
